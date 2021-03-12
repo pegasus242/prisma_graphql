@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//datasource db {
+//  provider = "sqlite"
+//  url      = "file:./dev.db"
+//}
+
+datasource db {
+  provider = "postgres"
+  url      = env("TEST_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int      @id @default(autoincrement()) 
+  username     String   @unique
+  password     String
+  profile      Profile?
+  address      Address?  
+}
+
+model Profile {
+  id          Int     @id @default(autoincrement()) 
+  Email       String  @unique
+  firstname   String
+  lastname    String
+  phonenumber String
+  user        User    @relation(fields: [userId], references: [id]) 
+  userId      Int     @unique
+}
+
+
+model Address {
+  id                Int     @id @default(autoincrement()) 
+  addressLine1      String  
+  addressLine2      String
+  user              User    @relation(fields: [userId], references: [id]) 
+  userId            Int     @unique
+}
